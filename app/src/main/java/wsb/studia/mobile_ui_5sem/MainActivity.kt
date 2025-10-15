@@ -50,7 +50,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             UIProjektZaliczenieTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    uwu(modifier = Modifier.padding(innerPadding))
+                    Uwu(modifier = Modifier.padding(innerPadding))
                 }
             }
         }
@@ -58,7 +58,7 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun uwu(modifier: Modifier = Modifier) {
+fun Uwu(modifier: Modifier = Modifier) {
     var shouldShowWelcome by rememberSaveable { mutableStateOf(true) }
 
     Surface(modifier) {
@@ -106,9 +106,15 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
                     .padding(12.dp)
             ) {
                 Text(text = "Hello ")
-                Text(text = name, style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.ExtraBold))
+                Text(
+                    text = name,
+                    style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.ExtraBold)
+                )
                 if (expanded)
-                    Text("UwUwUwUwUwUwUwUwUwUwUwUwUwUwUwUwUwUwUwUwUwUwUwUwUwUwUwUwUwUwUwUwUwU", modifier = Modifier.padding(top = 12.dp))
+                    Text(
+                        "UwUwUwUwUwUwUwUwUwUwUwUwUwUwUwUwUwUwUwUwUwUwUwUwUwUwUwUwUwUwUwUwUwU",
+                        modifier = Modifier.padding(top = 12.dp)
+                    )
             }
             IconButton(
                 onClick = { expanded = !expanded }
@@ -163,6 +169,6 @@ fun HelloScreenPreview() {
 @Composable
 fun AppPreview() {
     UIProjektZaliczenieTheme {
-        uwu(Modifier.fillMaxSize())
+        Uwu(Modifier.fillMaxSize())
     }
 }
