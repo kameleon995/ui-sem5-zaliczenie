@@ -1,28 +1,33 @@
 package wsb.studia.mobile_ui_5sem
 
-import android.content.res.Configuration
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.animation.animateContentSize
-import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.animation.core.spring
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ExpandLess
-import androidx.compose.material.icons.filled.ExpandMore
+import androidx.compose.foundation.layout.requiredHeight
+import androidx.compose.foundation.layout.requiredSize
+import androidx.compose.foundation.layout.requiredWidth
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.Button
-import androidx.compose.material3.ElevatedButton
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -37,10 +42,20 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.coerceAtLeast
+import androidx.compose.ui.unit.FontScaling
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.em
+import androidx.compose.ui.unit.sp
 import wsb.studia.mobile_ui_5sem.ui.theme.UIProjektZaliczenieTheme
 
 class MainActivity : ComponentActivity() {
@@ -50,7 +65,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             UIProjektZaliczenieTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Uwu(modifier = Modifier.padding(innerPadding))
+                    MainScreen(modifier = Modifier.padding(innerPadding))
                 }
             }
         }
@@ -58,117 +73,139 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun Uwu(modifier: Modifier = Modifier) {
+fun MainScreen(modifier: Modifier = Modifier) {
     var shouldShowWelcome by rememberSaveable { mutableStateOf(true) }
 
     Surface(modifier) {
         if (shouldShowWelcome) {
-            HelloScreen(onContinueClicked = { shouldShowWelcome = false })
+            WelcomeContent(onContinueClicked = { shouldShowWelcome = false })
         } else {
-            Greetings()
+            //Greetings()
         }
     }
 }
 
 @Composable
-fun Greetings(
+fun WelcomeContent(
     modifier: Modifier = Modifier,
-    names: List<String> = List(1000) { "$it" }
+    onContinueClicked: () -> Unit
 ) {
-    LazyColumn(modifier = modifier.padding(vertical = 4.dp)) {
-        items(items = names) { name ->
-            Greeting(name = name)
-        }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    var expanded by remember { mutableStateOf(false) }
-
-    Surface(
-        color = MaterialTheme.colorScheme.primary,
-        modifier = modifier.padding(vertical = 4.dp, horizontal = 8.dp)
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .fillMaxHeight()
+            .background(
+                color = Color(0xFFFFFFFF),
+            )
     ) {
-        Row(
+        Column(
             modifier = Modifier
-                .padding(12.dp)
-                .animateContentSize(
-                    animationSpec = spring(
-                        dampingRatio = Spring.DampingRatioMediumBouncy,
-                        stiffness = Spring.StiffnessLow
-                    )
+                .fillMaxSize()
+                .weight(1f)
+                .background(
+                    color = Color(0xFFFFFFFF),
                 )
         ) {
             Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
-                    .weight(1f)
-                    .padding(12.dp)
+                    .fillMaxSize()
+                    .background(color = Color(0x99000000))
+                    .padding(top = 55.dp)
             ) {
-                Text(text = "Hello ")
-                Text(
-                    text = name,
-                    style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.ExtraBold)
-                )
-                if (expanded)
-                    Text(
-                        "UwUwUwUwUwUwUwUwUwUwUwUwUwUwUwUwUwUwUwUwUwUwUwUwUwUwUwUwUwUwUwUwUwU",
-                        modifier = Modifier.padding(top = 12.dp)
+                Column(
+                    modifier = Modifier
+                        .padding(bottom = 96.dp)
+                        .fillMaxWidth()
+                        .background(
+                            color = MaterialTheme.colorScheme.outlineVariant,
+                        )
+                        .padding(vertical = 35.dp)
+                ) {
+                    Text("Witaj w Nutri-Spy",
+                        fontSize = 40.sp,
+                        textAlign = TextAlign.Center,
+                        //fontFamily = FontFamily.,
+                        modifier = Modifier
+                            .padding(bottom = 33.dp,start = 37.dp,end = 37.dp,)
                     )
+                    Text("Najważniejsze rzeczy  które musisz wiedzieć przed użyciem aplikacji",
+                        fontSize = 11.sp,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier
+                            .padding(bottom = 6.dp,start = 23.dp,end = 23.dp,)
+                    )
+                    Column(
+                        modifier = Modifier
+                            .padding(bottom = 9.dp,)
+                            .height(1.dp)
+                            .fillMaxWidth()
+                            .background(
+                                color = Color(0xFF000000),
+                            )
+                    ) { }
+                    Text("Aplikacja Nutri-Spy jest w fazie testów. Nie jest publicznie dostępna. Wszelkie problemy proszę zgłaszać do\n Grzegorza Widery i Szymona Gorczycy",
+                        fontSize = 11.sp,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier
+                            .padding(bottom = 25.dp,start = 50.dp,end = 50.dp,)
+                    )
+                    Text("Nutri-Spy skanuje kody kreskowe wybranych produktów spożywczych a następnie pokazuje ich skład w celu uświadomienia użytkownika o ilości i rodzaju składników, które zawiera produkt",
+                        fontSize = 11.sp,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier
+                            .padding(horizontal = 26.dp,)
+                    )
+                }
+                //ok button
+                ConfirmationButton(modifier, onContinueClicked)
             }
-            IconButton(
-                onClick = { expanded = !expanded }
+        }
+    }
+}
+
+@Composable
+fun ConfirmationButton(modifier: Modifier = Modifier, onContinueClicked: () -> Unit = {}) {
+    Button(onClick = onContinueClicked, modifier) {
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
+        ) {
+            Box(
+                modifier = modifier
+                    .clip(shape = RoundedCornerShape(100.dp))
+                    .background(color = MaterialTheme.colorScheme.onPrimary)
             ) {
                 Icon(
-                    imageVector = if (expanded) Icons.Filled.ExpandLess else Icons.Filled.ExpandMore,
-                    contentDescription = if (expanded) "Show less" else "Show more"
+                    imageVector = androidx.compose.material.icons.Icons.Default.Check,
+                    contentDescription = null,
+                    modifier = modifier
+                        .padding(top = 12.dp, bottom = 12.dp, start = 12.dp, end = 12.dp),
+                    tint = MaterialTheme.colorScheme.primary
                 )
+            }
+            Column(modifier = modifier.align(Alignment.CenterVertically)) {
+                Text(text = "Przejdź do aplikacji")
             }
         }
     }
 }
 
+@Preview
 @Composable
-fun HelloScreen(
-    onContinueClicked: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-
-    Column(
-        modifier = modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text("Welcome to your nightmare!")
-        Button(
-            modifier = Modifier.padding(vertical = 24.dp),
-            onClick = onContinueClicked
-        ) { Text("Continue") }
-    }
+private fun WelcomeContentPreview() {
+    WelcomeContent(onContinueClicked = {})
 }
 
-@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_NO)
+@Preview
 @Composable
-fun GreetingPreview() {
-    UIProjektZaliczenieTheme {
-        Surface {
-            Greetings()
-        }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun HelloScreenPreview() {
-    UIProjektZaliczenieTheme {
-        HelloScreen(onContinueClicked = {})
-    }
+private fun ConfirmationButtonPreview() {
+    ConfirmationButton()
 }
 
 @Preview(showBackground = true)
 @Composable
 fun AppPreview() {
     UIProjektZaliczenieTheme {
-        Uwu(Modifier.fillMaxSize())
+        MainScreen(Modifier.fillMaxSize())
     }
 }
