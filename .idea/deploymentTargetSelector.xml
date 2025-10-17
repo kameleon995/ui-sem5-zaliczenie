@@ -37,16 +37,27 @@
       </SelectionState>
       <SelectionState runConfigName="WelcomeContentPreview">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2025-10-16T16:54:31.902589700Z">
+        <DropdownSelection timestamp="2025-10-17T08:47:13.509997300Z">
           <Target type="DEFAULT_BOOT">
             <handle>
-              <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\grzeg\.android\avd\random_and15_one.avd" />
+              <DeviceId pluginId="PhysicalDevice" identifier="serial=HPV26JS1" />
             </handle>
           </Target>
         </DropdownSelection>
         <DialogSelection />
       </SelectionState>
-      <SelectionState runConfigName="WelcomeScreenPreview">
+      <SelectionState runConfigName="ButtonGrid">
+        <option name="selectionMode" value="DROPDOWN" />
+        <DropdownSelection timestamp="2025-10-17T08:47:45.157592100Z">
+          <Target type="DEFAULT_BOOT">
+            <handle>
+              <DeviceId pluginId="PhysicalDevice" identifier="serial=HPV26JS1" />
+            </handle>
+          </Target>
+        </DropdownSelection>
+        <DialogSelection />
+      </SelectionState>
+      <SelectionState runConfigName="HomeContentPreview">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>

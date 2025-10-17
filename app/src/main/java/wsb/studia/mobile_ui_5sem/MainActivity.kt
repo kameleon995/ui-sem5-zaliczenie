@@ -1,10 +1,11 @@
 package wsb.studia.mobile_ui_5sem
 
+import android.R
+import android.content.res.Configuration
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -14,22 +15,13 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.requiredHeight
-import androidx.compose.foundation.layout.requiredSize
-import androidx.compose.foundation.layout.requiredWidth
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.Button
-import androidx.compose.material3.Checkbox
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -37,24 +29,22 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.FontScaling
+import androidx.compose.ui.tooling.preview.PreviewScreenSizes
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
 import wsb.studia.mobile_ui_5sem.ui.theme.UIProjektZaliczenieTheme
 
@@ -65,28 +55,150 @@ class MainActivity : ComponentActivity() {
         setContent {
             UIProjektZaliczenieTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    MainScreen(modifier = Modifier.padding(innerPadding))
+                    AppContent(modifier = Modifier.padding(innerPadding))
                 }
+            }
+        }
+        //todo add onBackPressedListener that exist app rather than just the activity
+    }
+}
+
+@Composable
+private fun AppContent(modifier: Modifier = Modifier) {
+    var shouldShowWelcome by rememberSaveable { mutableStateOf(false) }
+
+    Surface(modifier) {
+        if (shouldShowWelcome) {
+            // overlap WelcomeContent over main screen
+            Overlay2(modifier = Modifier.fillMaxSize()) {
+                WelcomeContent(onContinueClicked = { shouldShowWelcome = false })
+                HomeContent(modifier = modifier)
+            }
+        } else {
+            // just main screen
+            HomeContent(modifier = modifier)
+        }
+    }
+}
+
+/**
+ * Overlays two layouts on top of each other. The first layout is in the foreground, the second is in the bottom.
+ *
+ * Exapmle use:
+ * ```
+ * Overlay2(modifier = Modifier.fillMaxSize()) {
+ *     OverlayContent(modifier = modifier.padding(top = 24.dp))
+ *     MainContent(modifier = modifier)
+ * }
+ * ```
+ *
+ * @param modifier modifier for the whole layout
+ * @param content list of layouts to be displayed, can be presented as a lambda
+ */
+@Composable
+//todo check if we need this elsewhere, if yes - move to helper class
+private fun Overlay2(
+    modifier: Modifier = Modifier,
+    content: @Composable () -> Unit
+) {
+    Layout(modifier = modifier, content = content) {
+        //todo add overlay logic
+            measurables, constraints ->
+        val upper = measurables[0]
+        val lower = measurables[1]
+        val looseConstraints = constraints.copy(
+            minWidth = 0,
+            minHeight = 0,
+        )
+        val upperPlaceable = upper.measure(looseConstraints)
+        val lowerPlaceable = lower.measure(looseConstraints)
+        layout(
+            width = constraints.maxWidth,
+            height = constraints.maxHeight
+        ) {
+            //lowerPlaceable.place((constraints.maxWidth - lowerPlaceable.width)/2, (constraints.maxHeight - lowerPlaceable.height)/2)
+            lowerPlaceable.place(0, 0)
+            upperPlaceable.place(0, 0)
+        }
+    }
+}
+
+@Composable
+private fun HomeContent(modifier: Modifier = Modifier) {
+//    Text("UwU", fontSize = 128.sp)
+    ButtonGrid(Modifier)
+}
+
+@Composable
+fun ButtonGrid(modifier: Modifier = Modifier) {
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        Column(
+            modifier = modifier,
+            verticalArrangement = Arrangement.spacedBy(64.dp, Alignment.CenterVertically)
+        ) {
+            Row(
+                modifier = modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(64.dp, Alignment.CenterHorizontally)
+            ) {
+                LabelledIconButton(iconResource = R.drawable.ic_dialog_alert, label = "Camera")
+                LabelledIconButton(iconResource = R.drawable.ic_dialog_alert, label = "Camera")
+            }
+            Row(
+                modifier = modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(64.dp, Alignment.CenterHorizontally)
+            ) {
+                LabelledIconButton(iconResource = R.drawable.ic_dialog_alert, label = "Camera")
+                LabelledIconButton(iconResource = R.drawable.ic_dialog_alert, label = "Camera")
             }
         }
     }
 }
 
 @Composable
-fun MainScreen(modifier: Modifier = Modifier) {
-    var shouldShowWelcome by rememberSaveable { mutableStateOf(true) }
-
-    Surface(modifier) {
-        if (shouldShowWelcome) {
-            WelcomeContent(onContinueClicked = { shouldShowWelcome = false })
-        } else {
-            //Greetings()
+fun LabelledIconButton(
+    modifier: Modifier = Modifier,
+    iconResource: Int,
+    label: String
+) {
+    Column(modifier = modifier) {
+        Button(
+            onClick = { /*TODO*/ },
+            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
+            shape = RoundedCornerShape(size = 16.dp),
+            modifier = modifier.size(96.dp)
+        ) {
+            Icon(
+                painter = painterResource(id = iconResource),
+                contentDescription = null,
+                modifier = modifier.fillMaxSize(0.75f),
+                tint = MaterialTheme.colorScheme.primary
+            )
         }
+        Text(
+            text = label,
+            fontSize = MaterialTheme.typography.labelSmall.fontSize,
+            modifier = modifier.align(Alignment.CenterHorizontally)
+        )
     }
 }
 
+@Preview(showBackground = true)
 @Composable
-fun WelcomeContent(
+private fun LabelledIconButtonPreview() {
+    LabelledIconButton(iconResource = android.R.drawable.ic_dialog_alert, label = "Camera")
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun HomeContentPreview() {
+    HomeContent()
+}
+
+
+// below is stuff for welcome screen
+
+@Composable
+private fun WelcomeContent(
     modifier: Modifier = Modifier,
     onContinueClicked: () -> Unit
 ) {
@@ -94,17 +206,11 @@ fun WelcomeContent(
         modifier = Modifier
             .fillMaxWidth()
             .fillMaxHeight()
-            .background(
-                color = Color(0xFFFFFFFF),
-            )
     ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .weight(1f)
-                .background(
-                    color = Color(0xFFFFFFFF),
-                )
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -144,7 +250,7 @@ fun WelcomeContent(
                                 color = Color(0xFF000000),
                             )
                     ) { }
-                    Text("Aplikacja Nutri-Spy jest w fazie testów. Nie jest publicznie dostępna. Wszelkie problemy proszę zgłaszać do\n Grzegorza Widery i Szymona Gorczycy",
+                    Text("Aplikacja Nutri-Spy jest w fazie testów. Nie jest publicznie dostępna. Wszelkie problemy proszę zgłaszać do Grzegorza\u00a0Widery i\u00a0Szymona\u00a0Gorczycy",
                         fontSize = 11.sp,
                         textAlign = TextAlign.Center,
                         modifier = Modifier
@@ -165,7 +271,7 @@ fun WelcomeContent(
 }
 
 @Composable
-fun ConfirmationButton(modifier: Modifier = Modifier, onContinueClicked: () -> Unit = {}) {
+private fun ConfirmationButton(modifier: Modifier = Modifier, onContinueClicked: () -> Unit = {}) {
     Button(onClick = onContinueClicked, modifier) {
         Row(
             horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
@@ -190,22 +296,10 @@ fun ConfirmationButton(modifier: Modifier = Modifier, onContinueClicked: () -> U
     }
 }
 
-@Preview
+@Preview(name = "Home with overlay")
 @Composable
-private fun WelcomeContentPreview() {
-    WelcomeContent(onContinueClicked = {})
-}
-
-@Preview
-@Composable
-private fun ConfirmationButtonPreview() {
-    ConfirmationButton()
-}
-
-@Preview(showBackground = true)
-@Composable
-fun AppPreview() {
+private fun AppPreview() {
     UIProjektZaliczenieTheme {
-        MainScreen(Modifier.fillMaxSize())
+        AppContent(Modifier.fillMaxSize())
     }
 }
